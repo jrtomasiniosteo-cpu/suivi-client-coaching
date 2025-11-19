@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outils de Suivi Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        .tools {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .tool-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .tool-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        .tool-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .tool-desc {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Outils de Suivi</h1>
+        <p class="subtitle">Choisissez l'outil que vous souhaitez utiliser</p>
+        
+        <div class="tools">
+            <a href="sommeil-tracker.html" class="tool-card">
+                <div class="tool-icon">🌙</div>
+                <div class="tool-title">Tracker de Sommeil</div>
+                <div class="tool-desc">Suivez votre sommeil et votre énergie sur une grille hebdomadaire interactive</div>
+            </a>
+            
+            <a href="questionnaire.html" class="tool-card">
+                <div class="tool-icon">💬</div>
+                <div class="tool-title">Questionnaire Quotidien</div>
+                <div class="tool-desc">Enregistrez votre ressenti quotidien : stress, humeur, énergie, fatigue</div>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
