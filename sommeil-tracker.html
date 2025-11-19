@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌙 Tracker de Sommeil Hebdomadaire</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .legend-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .legend-item.selected {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.2);
+        }
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+        }
+        .tracker-grid {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        th:first-child {
+            border-top-left-radius: 10px;
+        }
+        th:last-child {
+            border-top-right-radius: 10px;
+        }
+        td {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+        td:hover {
+            border-color: #667eea;
+            transform: scale(1.1);
+            z-index: 5;
+        }
+        td.time-label {
+            background: #f8f9fa;
+            font-weight: 600;
+            cursor: default;
+            width: 80px;
+        }
+        td.time-label:hover {
+            transform: none;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        }
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌙 Tracker de Sommeil Hebdomadaire</h1>
+        <p class="subtitle">Cliquez sur les cellules pour marquer votre semaine</p>
+        
+        <div class="legend">
+            <div class="legend-item selected" data-type="sleep">
+                <div class="legend-color" style="background: #4CAF50;"></div>
+                <span>💤 Sommeil</span>
+            </div>
+            <div class="legend-item" data-type="mental">
+                <div class="legend-color" style="background: #2196F3;"></div>
+                <span>🧠 Boost Mental</span>
+            </div>
+            <div class="legend-item" data-type="physical">
+                <div class="legend-color" style="background: #FF9800;"></div>
+                <span>💪 Boost Physique</span>
+            </div>
+            <div class="legend-item" data-type="fatigue">
+                <div class="legend-color" style="background: #F44336;"></div>
+                <span>😴 Fatigue</span>
+            </div>
+            <div class="legend-item" data-type="waking">
+                <div class="legend-color" style="background: #9C27B0;"></div>
+                <span>🌙 Réveil Nocturne</span>
+            </div>
+        </div>
+
+        <div class="tracker-grid">
+            <table id="sleepTable">
+                <thead>
+                    <tr>
+                        <th>Heure</th>
+                        <th>Lun</th>
+                        <th>Mar</th>
+                        <th>Mer</th>
+                        <th>Jeu</th>
+                        <th>Ven</th>
+                        <th>Sam</th>
+                        <th>Dim</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">💤 Heures de Sommeil</div>
+                <div class="stat-value" id="sleepHours">0h</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🧠 Boosts Mentaux</div>
+                <div class="stat-value" id="mentalCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">💪 Boosts Physiques</div>
+                <div class="stat-value" id="physicalCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">😴 Moments de Fatigue</div>
+                <div class="stat-value" id="fatigueCount">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">🌙 Réveils Nocturnes</div>
+                <div class="stat-value" id="wakingCount">0</div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-primary" onclick="saveData()">💾 Sauvegarder</button>
+            <button class="btn-secondary" onclick="resetData()">🔄 Réinitialiser</button>
+        </div>
+    </div>
+
+    <script>
+        const types = {
+            sleep: { color: '#4CAF50', emoji: '💤' },
+            mental: { color: '#2196F3', emoji: '🧠' },
+            physical: { color: '#FF9800', emoji: '💪' },
+            fatigue: { color: '#F44336', emoji: '😴' },
+            waking: { color: '#9C27B0', emoji: '🌙' }
+        };
+
+        let selectedType = 'sleep';
+        let data = {};
+        let isMouseDown = false;
+
+        // Generate 24-hour table
+        function initTable() {
+            const tbody = document.getElementById('tableBody');
+            for (let hour = 0; hour < 24; hour++) {
+                const row = document.createElement('tr');
+                const timeCell = document.createElement('td');
+                timeCell.className = 'time-label';
+                timeCell.textContent = `${hour.toString().padStart(2, '0')}:00`;
+                row.appendChild(timeCell);
+
+                for (let day = 0; day < 7; day++) {
+                    const cell = document.createElement('td');
+                    cell.dataset.day = day;
+                    cell.dataset.hour = hour;
+                    cell.addEventListener('mousedown', handleCellClick);
+                    cell.addEventListener('mouseenter', handleCellHover);
+                    row.appendChild(cell);
+                }
+                tbody.appendChild(row);
+            }
+        }
+
+        // Handle legend selection
+        document.querySelectorAll('.legend-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.legend-item').forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedType = this.dataset.type;
+            });
+        });
+
+        // Mouse events for painting
+        document.addEventListener('mousedown', () => isMouseDown = true);
+        document.addEventListener('mouseup', () => isMouseDown = false);
+
+        function handleCellClick(e) {
+            toggleCell(e.target);
+        }
+
+        function handleCellHover(e) {
+            if (isMouseDown && !e.target.classList.contains('time-label')) {
+                toggleCell(e.target);
+            }
+        }
+
+        function toggleCell(cell) {
+            const key = `${cell.dataset.day}-${cell.dataset.hour}`;
+            
+            if (data[key] === selectedType) {
+                delete data[key];
+                cell.style.background = '';
+                cell.textContent = '';
+            } else {
+                data[key] = selectedType;
+                cell.style.background = types[selectedType].color;
+                cell.textContent = types[selectedType].emoji;
+            }
+            
+            updateStats();
+        }
+
+        function updateStats() {
+            const counts = {
+                sleep: 0,
+                mental: 0,
+                physical: 0,
+                fatigue: 0,
+                waking: 0
+            };
+
+            Object.values(data).forEach(type => {
+                counts[type]++;
+            });
+
+            document.getElementById('sleepHours').textContent = counts.sleep + 'h';
+            document.getElementById('mentalCount').textContent = counts.mental;
+            document.getElementById('physicalCount').textContent = counts.physical;
+            document.getElementById('fatigueCount').textContent = counts.fatigue;
+            document.getElementById('wakingCount').textContent = counts.waking;
+        }
+
+        function saveData() {
+            localStorage.setItem('sleepTrackerData', JSON.stringify(data));
+            alert('✅ Données sauvegardées avec succès!');
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('sleepTrackerData');
+            if (saved) {
+                data = JSON.parse(saved);
+                Object.entries(data).forEach(([key, type]) => {
+                    const [day, hour] = key.split('-');
+                    const cell = document.querySelector(`td[data-day="${day}"][data-hour="${hour}"]`);
+                    if (cell) {
+                        cell.style.background = types[type].color;
+                        cell.textContent = types[type].emoji;
+                    }
+                });
+                updateStats();
+            }
+        }
+
+        function resetData() {
+            if (confirm('⚠️ Voulez-vous vraiment réinitialiser toutes les données?')) {
+                data = {};
+                document.querySelectorAll('td:not(.time-label)').forEach(cell => {
+                    cell.style.background = '';
+                    cell.textContent = '';
+                });
+                updateStats();
+                localStorage.removeItem('sleepTrackerData');
+            }
+        }
+
+        // Initialize
+        initTable();
+        loadData();
+    </script>
+</body>
+</html>
