@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Questionnaire Quotidien de Bien-Être</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+        input[type="date"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .slider-group {
+            margin-bottom: 20px;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .slider-value {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-submit {
+            background: #667eea;
+            color: white;
+        }
+        .btn-submit:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        }
+        .btn-reset {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .btn-reset:hover {
+            background: #d0d0d0;
+        }
+        .history {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f0f0f0;
+        }
+        .history h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        .entry {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .entry-date {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        .entry-data {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.6;
+        }
+        .success-message {
+            display: none;
+            background: #4CAF50;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Questionnaire Quotidien</h1>
+        
+        <div class="success-message" id="successMessage">✅ Données sauvegardées avec succès!</div>
+        
+        <form id="wellnessForm">
+            <div class="form-group">
+                <label for="date">📅 Date</label>
+                <input type="date" id="date" required>
+            </div>
+            
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label for="stress">😰 Niveau de Stress</label>
+                    <span class="slider-value" id="stressValue">5</span>
+                </div>
+                <input type="range" id="stress" min="1" max="10" value="5">
+            </div>
+            
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label for="mood">😊 Humeur</label>
+                    <span class="slider-value" id="moodValue">5</span>
+                </div>
+                <input type="range" id="mood" min="1" max="10" value="5">
+            </div>
+            
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label for="fatigue">😴 Fatigue</label>
+                    <span class="slider-value" id="fatigueValue">5</span>
+                </div>
+                <input type="range" id="fatigue" min="1" max="10" value="5">
+            </div>
+            
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label for="energy">⚡ Énergie</label>
+                    <span class="slider-value" id="energyValue">5</span>
+                </div>
+                <input type="range" id="energy" min="1" max="10" value="5">
+            </div>
+            
+            <div class="slider-group">
+                <div class="slider-label">
+                    <label for="sleep">😴 Qualité du Sommeil</label>
+                    <span class="slider-value" id="sleepValue">5</span>
+                </div>
+                <input type="range" id="sleep" min="1" max="10" value="5">
+            </div>
+            
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="pain" name="pain">
+                    <label for="pain" style="margin: 0;">🤕 Douleur/Inconfort présent</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="notes">📝 Notes</label>
+                <textarea id="notes" placeholder="Ajoutez vos observations du jour..."></textarea>
+            </div>
+            
+            <div class="buttons">
+                <button type="submit" class="btn-submit">💾 Enregistrer</button>
+                <button type="reset" class="btn-reset">🔄 Réinitialiser</button>
+            </div>
+        </form>
+        
+        <div class="history">
+            <h2>📊 Historique (7 derniers jours)</h2>
+            <div id="historyContainer"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Set today's date by default
+        document.getElementById('date').valueAsDate = new Date();
+        
+        // Update slider values display
+        ['stress', 'mood', 'fatigue', 'energy', 'sleep'].forEach(slider => {
+            document.getElementById(slider).addEventListener('input', function() {
+                document.getElementById(slider + 'Value').textContent = this.value;
+            });
+        });
+        
+        // Handle form submission
+        document.getElementById('wellnessForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const entry = {
+                date: document.getElementById('date').value,
+                stress: document.getElementById('stress').value,
+                mood: document.getElementById('mood').value,
+                fatigue: document.getElementById('fatigue').value,
+                energy: document.getElementById('energy').value,
+                sleep: document.getElementById('sleep').value,
+                pain: document.getElementById('pain').checked,
+                notes: document.getElementById('notes').value
+            };
+            
+            // Get existing data
+            let data = JSON.parse(localStorage.getItem('wellnessData')) || [];
+            
+            // Remove duplicate entry for same date
+            data = data.filter(d => d.date !== entry.date);
+            
+            // Add new entry
+            data.push(entry);
+            
+            // Keep only last 7 days
+            data = data.slice(-7);
+            
+            // Save to localStorage
+            localStorage.setItem('wellnessData', JSON.stringify(data));
+            
+            // Show success message
+            const msg = document.getElementById('successMessage');
+            msg.style.display = 'block';
+            setTimeout(() => { msg.style.display = 'none'; }, 3000);
+            
+            // Reload history
+            loadHistory();
+        });
+        
+        function loadHistory() {
+            const data = JSON.parse(localStorage.getItem('wellnessData')) || [];
+            const container = document.getElementById('historyContainer');
+            
+            if (data.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Aucune donnée enregistrée</p>';
+                return;
+            }
+            
+            container.innerHTML = data.reverse().map(entry => `
+                <div class="entry">
+                    <div class="entry-date">${new Date(entry.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    <div class="entry-data">
+                        😰 Stress: ${entry.stress}/10 | 😊 Humeur: ${entry.mood}/10 | 😴 Fatigue: ${entry.fatigue}/10 | ⚡ Énergie: ${entry.energy}/10 | 😴 Sommeil: ${entry.sleep}/10<br>
+                        ${entry.pain ? '🤕 Douleur présente' : '✅ Pas de douleur'}
+                        ${entry.notes ? `<br>📝 ${entry.notes}` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Load history on page load
+        loadHistory();
+    </script>
+</body>
+</html>
